@@ -26,6 +26,9 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Prepare static app
+        env:
+          OA_SUPABASE_URL: ${{ secrets.OA_SUPABASE_URL }}
+          OA_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.OA_SUPABASE_PUBLISHABLE_KEY }}
         run: |
           mkdir -p _site
           cp index.html _site/
