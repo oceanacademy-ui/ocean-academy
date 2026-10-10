@@ -1,0 +1,15 @@
+(function (OA) {
+  'use strict';
+  const names = ['users','branches','categories','courses','modules','lessons','sessions','enrollments','attendance','lessonProgress','questions','quizzes','quizAttempts','competencies','jobProfiles','competencyRequirements','tnaEvaluations','idps','badges','userBadges','pointsLedger','notifications','announcements','certificates','auditLog','settings','blobs','salesSubmissions','meta'];
+  const request = function (req) { return new Promise(function (resolve, reject) { req.onsuccess = function () { resolve(req.result); }; req.onerror = function () { reject(req.error); }; }); };
+  OA.store = {
+    open: function () { if (OA.cloud && OA.cloud.enabled) return Promise.resolve(true); if (OA.state.db) return Promise.resolve(OA.state.db); return new Promise(function (resolve, reject) { let settled = false; const finish = function (error, db) { if (settled) return; settled = true; window.clearTimeout(timer); if (error) reject(error); else { OA.state.db = db; db.onversionchange = function () { db.close(); OA.state.db = null; }; resolve(db); } }; const timer = window.setTimeout(function () { finish(new Error('IndexedDB open timed out. Close other Ocean Academy tabs and reload.')); }, 8000); let req; try { req = indexedDB.open('oa_db', 2); } catch (error) { finish(error); return; } req.onupgradeneeded = function () { try { names.forEach(function (name) { if (!req.result.objectStoreNames.contains(name)) req.result.createObjectStore(name, { keyPath:'id' }); }); req.transaction.objectStore('meta').put({ id:'schemaVersion', value:2 }); } catch (error) { finish(error); } }; req.onsuccess = function () { finish(null, req.result); }; req.onerror = function () { finish(req.error || new Error('IndexedDB could not be opened.')); }; req.onblocked = function () { finish(new Error('IndexedDB is blocked by another open tab. Close other Ocean Academy tabs and reload.')); }; }); },
+    get: async function (store, id) { if (OA.cloud && OA.cloud.enabled) return OA.cloud.records.get(store,id); return request(OA.state.db.transaction(store).objectStore(store).get(id)); },
+    getAll: async function (store) { if (OA.cloud && OA.cloud.enabled) return OA.cloud.records.getAll(store); return request(OA.state.db.transaction(store).objectStore(store).getAll()); },
+    put: async function (store, value) { if (OA.cloud && OA.cloud.enabled) return OA.cloud.records.put(store,value); return request(OA.state.db.transaction(store, 'readwrite').objectStore(store).put(value)); },
+    delete: async function (store, id) { if (OA.cloud && OA.cloud.enabled) return OA.cloud.records.delete(store,id); return request(OA.state.db.transaction(store, 'readwrite').objectStore(store).delete(id)); },
+    count: async function (store) { if (OA.cloud && OA.cloud.enabled) return (await OA.cloud.records.getAll(store)).length; return request(OA.state.db.transaction(store).objectStore(store).count()); },
+    exportAll: async function () { const data = {}; for (const name of names) data[name] = await OA.store.getAll(name); return { schemaVersion: 1, data: data }; },
+    names: names
+  };
+})(window.OA = window.OA || {});

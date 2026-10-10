@@ -1,0 +1,1 @@
+@media print { body { background:var(--oa-white); } .oa-sidebar,.oa-topbar,.oa-no-print { display:none; } .oa-shell { display:block; } .oa-content { max-width:none; padding:0; } .oa-card { box-shadow:none; } }

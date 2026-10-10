@@ -1,0 +1,18 @@
+.oa-app { min-height:100vh; }
+.oa-shell { display:grid; grid-template-columns:260px minmax(0,1fr); min-height:100vh; }
+.oa-sidebar { display:flex; flex-direction:column; gap:var(--oa-space-3); padding:var(--oa-space-3) var(--oa-space-2); background:var(--oa-white); border-inline-start:1px solid var(--oa-sky-200); }
+.oa-brand { display:flex; align-items:center; gap:.75rem; color:var(--oa-blue-800); font-size:1.1rem; font-weight:800; text-decoration:none; }
+.oa-brand-logo { display:block; width:54px; height:54px; flex:0 0 auto; object-fit:contain; border-radius:12px; background:var(--oa-white); }
+.oa-nav { display:grid; gap:.35rem; }
+.oa-nav a { padding:.7rem .9rem; color:var(--oa-text-muted); text-decoration:none; border-radius:10px; }
+.oa-nav a:hover,.oa-nav a[aria-current="page"] { color:var(--oa-blue-800); background:var(--oa-sky-100); }
+.oa-sidebar-foot { margin-block-start:auto; }
+.oa-main { min-width:0; }
+.oa-topbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1rem clamp(1rem,3vw,2.5rem); background:var(--oa-white); border-block-end:1px solid var(--oa-sky-200); }
+.oa-top-actions { display:flex; align-items:center; gap:.75rem; }
+.oa-content { max-width:1440px; margin-inline:auto; padding:clamp(1rem,3vw,2.5rem); }
+.oa-page-head { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-block-end:1.5rem; }
+.oa-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1rem; }
+@media (max-width:900px) { .oa-shell { grid-template-columns:210px minmax(0,1fr); } .oa-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:767px) { .oa-shell { display:flex; flex-direction:column; } .oa-sidebar { gap:.5rem; padding:.7rem 1rem; border-inline-start:0; border-block-end:1px solid var(--oa-sky-200); } .oa-brand { font-size:1rem; } .oa-brand-logo { width:42px;height:42px; } .oa-nav { display:flex; overflow:auto; padding-block-end:.25rem; } .oa-nav a { flex:0 0 auto; padding:.45rem .7rem; font-size:.88rem; } .oa-sidebar-foot { display:none; } .oa-topbar { padding:.75rem 1rem; } .oa-grid { grid-template-columns:1fr 1fr; gap:.65rem; } .oa-content { padding:1rem; } }
+@media (max-width:380px) { .oa-grid { grid-template-columns:1fr; } .oa-topbar { align-items:flex-start; flex-direction:column; } }

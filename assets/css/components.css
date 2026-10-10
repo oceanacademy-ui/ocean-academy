@@ -1,0 +1,21 @@
+.oa-card { padding:1.2rem; background:var(--oa-white); border:1px solid var(--oa-sky-200); border-radius:var(--oa-radius); box-shadow:var(--oa-shadow); }
+.oa-stat { display:grid; gap:.3rem; }
+.oa-stat strong { color:var(--oa-blue-800); font-size:1.8rem; line-height:1.2; }
+.oa-stat span { color:var(--oa-text-muted); font-size:.9rem; }
+.oa-button { display:inline-flex; align-items:center; justify-content:center; gap:.5rem; min-height:42px; padding:.55rem 1rem; color:var(--oa-white); background:var(--oa-blue-600); border:1px solid var(--oa-blue-600); border-radius:10px; font-weight:700; text-decoration:none; cursor:pointer; }
+.oa-button:hover { background:var(--oa-blue-800); }
+.oa-button-secondary { color:var(--oa-blue-800); background:var(--oa-white); border-color:var(--oa-sky-200); }
+.oa-button-secondary:hover { background:var(--oa-sky-100); }
+.oa-field { display:grid; gap:.35rem; margin-block-end:1rem; }
+.oa-field label { font-size:.92rem; font-weight:700; }
+.oa-input { width:100%; min-height:44px; padding:.6rem .75rem; color:var(--oa-text); background:var(--oa-white); border:1px solid var(--oa-sky-200); border-radius:9px; }
+.oa-alert { padding:.75rem 1rem; color:var(--oa-danger); background:var(--oa-white); border:1px solid var(--oa-danger); border-radius:10px; }
+.oa-badge { display:inline-flex; padding:.2rem .65rem; color:var(--oa-green-700); background:var(--oa-sky-100); border-radius:999px; font-size:.82rem; font-weight:700; }
+.oa-list { display:grid; gap:.75rem; padding:0; margin:0; list-style:none; }
+.oa-list li { display:flex; justify-content:space-between; gap:1rem; padding-block:.65rem; border-block-end:1px solid var(--oa-sky-100); }
+.oa-login-wrap { display:grid; min-height:100vh; place-items:center; padding:1rem; }
+.oa-login-card { width:min(100%,460px); }
+.oa-login-card .oa-brand { flex-direction:column; justify-content:center; gap:.35rem; margin-block-end:1.5rem; }
+.oa-login-card .oa-brand-logo { width:124px; height:124px; }
+.oa-demo { padding:1rem; color:var(--oa-text-muted); background:var(--oa-sky-50); border-radius:10px; font-size:.88rem; }
+.oa-demo button { margin:.3rem; }
