@@ -7,8 +7,23 @@
   OA.services.auth = {
     login: async function (username, password) {
       if (OA.cloud && OA.cloud.enabled) {
-        try { await OA.cloud.signIn(username.trim().toLowerCase(), password); const cloudUser = await OA.cloud.currentProfile(); if (!cloudUser || cloudUser.status !== 'active') { await OA.cloud.signOut(); return fail('AUTH_INVALID','badLogin'); } OA.state.user = safeUser(cloudUser); if (cloudUser.role === 'admin') await OA.seedCore(); return { ok:true, data:OA.state.user }; }
-        catch (_) { return fail('AUTH_INVALID','badLogin'); }
+                try { await OA.cloud.signIn(username.trim().toLowerCase(), password); }
+        catch (error) {
+          OA.log.error(error);
+          if (error && error.code === 'email_not_confirmed') return fail('EMAIL_NOT_CONFIRMED','adminCheckEmail');
+          if (error && ['invalid_credentials','invalid_grant','user_not_found'].includes(error.code)) return fail('AUTH_INVALID','badLogin');
+          return fail('AUTH_SERVICE_ERROR','cloudError');
+        }
+        let cloudUser;
+        try { cloudUser = await OA.cloud.currentProfile(); }
+        catch (error) { OA.log.error(error); await OA.cloud.signOut(); return fail('PROFILE_LOAD_FAILED','profileLoadFailed'); }
+        if (!cloudUser || cloudUser.status !== 'active') { await OA.cloud.signOut(); return fail('PROFILE_UNAVAILABLE','profileLoadFailed'); }
+        OA.state.user = safeUser(cloudUser);
+        if (cloudUser.role === 'admin') {
+          try { await OA.seedCore(); }
+          catch (error) { OA.log.error(error); }
+        }
+        return { ok:true, data:OA.state.user };
       }
       const users = await OA.repo.users.list(); const user = users.find(function (item) { return item.username.toLowerCase() === username.trim().toLowerCase(); }); if (!user || user.status !== 'active') return fail('AUTH_INVALID','badLogin'); if (user.lockedUntil && Date.parse(user.lockedUntil) > Date.now()) return fail('AUTH_LOCKED','locked'); const valid = await OA.crypto.hash(password, user.salt) === user.passwordHash; if (!valid) { const failures = (user.failedLogins || 0) + 1; await OA.repo.users.save(Object.assign({}, user, { failedLogins:failures, lockedUntil:failures >= 5 ? new Date(Date.now() + 300000).toISOString() : null })); return fail(failures >= 5 ? 'AUTH_LOCKED' : 'AUTH_INVALID', failures >= 5 ? 'locked' : 'badLogin'); } await OA.repo.users.save(Object.assign({}, user, { failedLogins:0, lockedUntil:null, lastLoginAt:new Date().toISOString() })); localStorage.setItem(sessionKey, JSON.stringify({ userId:user.id, activityAt:Date.now() })); OA.state.user = safeUser(user); return { ok:true, data:OA.state.user };
     },
